@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { SearchBar } from 'react-native-elements';
 import { View, StyleSheet, ImageBackground, Text } from 'react-native';
 import WeatherView from './components/WeatherView.js'
+import { OPEN_WEATHER_API_KEY } from '@env'
 
 
 export default class App extends React.Component {
@@ -11,7 +12,7 @@ export default class App extends React.Component {
 
   updateSearch = (search) => {
     this.setState({ search });
-    console.log(search);
+    console.log(OPEN_WEATHER_API_KEY)
   };
 
   render() {
