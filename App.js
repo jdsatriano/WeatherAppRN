@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
-import { SearchBar } from 'react-native-elements';
 import { View, StyleSheet, ImageBackground, Text } from 'react-native';
 import WeatherView from './components/WeatherView.js'
-import { OPEN_WEATHER_API_KEY } from '@env'
+import SearchBar from 'react-native-search-bar';
 
 
 export default class App extends React.Component {
@@ -12,7 +11,11 @@ export default class App extends React.Component {
 
   updateSearch = (search) => {
     this.setState({ search });
-    console.log(OPEN_WEATHER_API_KEY)
+    console.log(search);
+  };
+
+  searchSubmit = (search) => {
+    console.log(search);
   };
 
   render() {
@@ -26,10 +29,9 @@ export default class App extends React.Component {
           >
             <View style={styles.searchBarStyle}>
               <SearchBar
-                placeholder="Search a city.."
+                ref="searchBar"
+                placeholder="Search"
                 onChangeText={this.updateSearch}
-                value={search}
-                style={styles.test}
               />
             </View>
           </ImageBackground>
@@ -45,7 +47,7 @@ const styles = StyleSheet.create({
   },
   searchBarStyle: {
     width: '100%',
-    backgroundColor: 'white',
+    backgroundColor: 'black',
     marginTop: '10%'
   },
   weatherViewStyle: {
