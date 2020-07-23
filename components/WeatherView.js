@@ -4,9 +4,11 @@ import { OPEN_WEATHER_API_KEY } from '@env'
 
 export default class WeatherView extends React.Component {
 
-  componentDidMount() {
+  componentDidUpdate() {
+    const city = this.props.citySearch
+    
     // Construct the API url to call
-		let url = 'https://api.openweathermap.org/data/2.5/weather?q=Houston' + '&appid=' + OPEN_WEATHER_API_KEY;
+		let url = 'https://api.openweathermap.org/data/2.5/weather?q=' + city + '&appid=' + OPEN_WEATHER_API_KEY;
 
 		// Call the API, and set the state of the weather forecast
 		fetch(url)
@@ -26,8 +28,11 @@ export default class WeatherView extends React.Component {
 
 const styles = StyleSheet.create({
   weatherViewStyle: {
-    width: '100%',
-    height: '100%',
-    resizeMode: 'contain'
+    width: '80%',
+    height: '65%',
+    backgroundColor: 'white',
+    borderRadius: 20,
+    opacity: 0.95,
+    marginTop: '10%'
   }
 });

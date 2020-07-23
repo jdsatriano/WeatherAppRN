@@ -9,13 +9,9 @@ export default class App extends React.Component {
     search: '',
   };
 
-  updateSearch = (search) => {
-    this.setState({ search });
-    console.log(search);
-  };
-
   searchSubmit = (search) => {
-    console.log(search);
+    this.setState({search: search});
+    this.refs.searchBar.clearText();
   };
 
   render() {
@@ -30,10 +26,12 @@ export default class App extends React.Component {
             <View style={styles.searchBarStyle}>
               <SearchBar
                 ref="searchBar"
-                placeholder="Search"
-                onChangeText={this.updateSearch}
+                placeholder='Search for city, state, or country'
+                onSearchButtonPress={this.searchSubmit}
+                barStyle='black'
               />
             </View>
+            <WeatherView citySearch={search}/>
           </ImageBackground>
         </View>
     );
@@ -52,7 +50,8 @@ const styles = StyleSheet.create({
   },
   weatherViewStyle: {
     width:'100%',
-    height: '100%'
+    height: '100%',
+    alignItems: 'center'
   },
   test: {
     backgroundColor: 'white',
