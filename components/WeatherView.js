@@ -56,11 +56,11 @@ export default class WeatherView extends React.Component {
         <Image
           source={imageMap[this.state.icon]}
         />
-        <Text>{this.state.description}</Text>
+        <Text style={styles.dataStyle}>{this.state.description}</Text>
         <Text style={styles.locationStyle}>Temperature</Text>
-        <Text>{this.state.temperature}</Text>
+        <Text style={styles.dataStyle}>{this.state.temperature}</Text>
         <Text style={styles.locationStyle}>Feels Like</Text>
-        <Text>{this.state.feelsLike}</Text>
+        <Text style={styles.dataStyle}>{this.state.feelsLike}</Text>
       </View>
     );
   }
@@ -80,6 +80,9 @@ const styles = StyleSheet.create({
     fontSize: 30,
     marginTop: '7%',
     fontFamily: 'Arial Rounded MT Bold',
+  },
+  dataStyle: {
+    fontSize: 15
   }
 });
 
