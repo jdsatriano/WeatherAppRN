@@ -7,20 +7,27 @@ import SearchBar from 'react-native-search-bar';
 export default class App extends React.Component {
   state = {
     search: '',
+    isDay: true,
+    needUpdate: false
   };
 
   searchSubmit = (search) => {
-    this.setState({search: search});
+    this.setState({search: search, needUpdate: true});
     this.refs.searchBar.clearText();
   };
 
+  updateImage = (isDay) => {
+    this.setState({isDay: isDay, needUpdate: false});
+  }
+
   render() {
-    const { search } = this.state;
+    const search = this.state.search;
+    const isDay = this.state.isDay;
 
     return (
         <View style={styles.container}>
           <ImageBackground
-            source={require('./assets/nighttime.jpg')}
+            source={isDay ? require('./assets/daytime.jpg') : require('./assets/nighttime.jpg')}
             style={styles.weatherViewStyle}
           >
             <View style={styles.searchBarStyle}>
@@ -31,7 +38,7 @@ export default class App extends React.Component {
                 barStyle='black'
               />
             </View>
-            <WeatherView citySearch={search}/>
+            <WeatherView citySearch={search} updateImage={this.updateImage} update={this.state.needUpdate}/>
           </ImageBackground>
         </View>
     );
