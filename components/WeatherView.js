@@ -4,7 +4,6 @@ import { OPEN_WEATHER_API_KEY } from '@env'
 
 export default class WeatherView extends React.Component {
   state = {
-    time: '',
     location: '',
     icon: '',
     temperature: null,
@@ -21,7 +20,7 @@ export default class WeatherView extends React.Component {
       const city = this.props.citySearch
 
       // Construct the API url to call
-  		let url = 'https://api.openweathermap.org/data/2.5/weather?q=' + city + '&appid=' + OPEN_WEATHER_API_KEY;
+  		let url = 'https://api.openweathermap.org/data/2.5/weather?q=' + city + '&appid=' + OPEN_WEATHER_API_KEY + '&units=imperial';
 
       console.log(url);
 
@@ -30,18 +29,23 @@ export default class WeatherView extends React.Component {
   		.then(response => response.json())
   		.then(data => {
         let isDay = data.sys.sunset > data.dt && data.sys.sunrise < data.dt;
-        let newtime = data.dt + data.timezone
-        let date = new Date(newtime * 1000);
         let name = data.name + ', ' + data.sys.country
+        let temp = data.main.temp.toString() + 'F'
+        let feels = data.main.feels_like.toString() + 'F'
+        let description = data.weather[0].description
 
         this.setState({
           location: name,
           icon: data.weather[0].icon,
-          temperature: data.main.temp,
-          feelsLike: data.main.feels_like
+          temperature: data.main.temp + ' F',
+          feelsLike: data.main.feels_like + ' F',
+          description: description
         });
         this.props.updateImage(isDay);
-  		});
+  		})
+      .catch(error => {
+        console.log(error);
+      })
     }
   }
 
@@ -52,11 +56,11 @@ export default class WeatherView extends React.Component {
         <Image
           source={imageMap[this.state.icon]}
         />
+        <Text>{this.state.description}</Text>
         <Text style={styles.locationStyle}>Temperature</Text>
         <Text>{this.state.temperature}</Text>
         <Text style={styles.locationStyle}>Feels Like</Text>
         <Text>{this.state.feelsLike}</Text>
-
       </View>
     );
   }
@@ -65,16 +69,16 @@ export default class WeatherView extends React.Component {
 const styles = StyleSheet.create({
   weatherViewStyle: {
     width: '80%',
-    height: '65%',
+    height: '46%',
     backgroundColor: 'white',
     borderRadius: 20,
     opacity: 0.95,
-    marginTop: '10%',
+    marginTop: '30%',
     alignItems: 'center',
   },
   locationStyle: {
     fontSize: 30,
-    marginTop: '5%',
+    marginTop: '7%',
     fontFamily: 'Arial Rounded MT Bold',
   }
 });
