@@ -1,55 +1,82 @@
 import React, { Component } from 'react';
 import { View, StyleSheet, Image, Text } from 'react-native';
 import { OPEN_WEATHER_API_KEY } from '@env'
+import Geolocation from '@react-native-community/geolocation';
 
 export default class WeatherView extends React.Component {
   state = {
     location: '',
     icon: '',
     temperature: null,
-    feelsLike: null
+    feelsLike: null,
+    lat: null,
+    long: null
   }
 
   componentDidMount() {
     // load with geolocation weather data
+    this.getLocation()
   }
 
   componentDidUpdate() {
     // run only if the parent needs update
     if (this.props.update) {
       const city = this.props.citySearch
-
-      // Construct the API url to call
   		let url = 'https://api.openweathermap.org/data/2.5/weather?q=' + city + '&appid=' + OPEN_WEATHER_API_KEY + '&units=imperial';
-
-      console.log(url);
-
-  		// Call the API, and set the state of the weather forecast
-  		fetch(url)
-  		.then(response => response.json())
-  		.then(data => {
-        let isDay = data.sys.sunset > data.dt && data.sys.sunrise < data.dt;
-        let name = data.name + ', ' + data.sys.country
-        let temp = data.main.temp.toString() + 'F'
-        let feels = data.main.feels_like.toString() + 'F'
-        let description = data.weather[0].description
-
-        this.setState({
-          location: name,
-          icon: data.weather[0].icon,
-          temperature: data.main.temp + ' F',
-          feelsLike: data.main.feels_like + ' F',
-          description: description
-        });
-        this.props.updateImage(isDay);
-  		})
-      .catch(error => {
-        console.log(error);
-      })
+      this.getWeather(url)
     }
   }
 
+  getWeather(url) {
+    // Call the API, and set the state of the weather forecast
+    fetch(url)
+    .then(response => response.json())
+    .then(data => {
+      let isDay = data.sys.sunset > data.dt && data.sys.sunrise < data.dt;
+      let name = data.name + ', ' + data.sys.country
+      let temp = data.main.temp.toString() + 'F'
+      let feels = data.main.feels_like.toString() + 'F'
+      let description = data.weather[0].description
+
+      this.setState({
+        location: name,
+        icon: data.weather[0].icon,
+        temperature: data.main.temp + ' F',
+        feelsLike: data.main.feels_like + ' F',
+        description: description
+      });
+      this.props.updateImage(isDay);
+    })
+    .catch(error => {
+      console.log(error);
+    })
+  }
+
+  getLocation() {
+    navigator.geolocation.watchPosition((position) => {
+      this.setState({lat: position.coords.latitude, long: position.coords.longitude})
+      console.log(position.coords.latitude)
+      console.log(position.coords.longitude)
+      let url = 'https://api.openweathermap.org/data/2.5/weather?lat=' + this.state.lat + '&lon=' + this.state.long + '&appid=' + OPEN_WEATHER_API_KEY + '&units=imperial';
+      console.log(url)
+      this.getWeather(url)
+    }, (error)=>console.log(error));
+
+    /*Geolocation.getCurrentPosition(
+      position => {
+        const initialPosition = JSON.stringify(position);
+        console.log(initialPosition)
+        this.setState({lat: initialPosition.coords.latitude, long: initialPosition.coords.longitude})
+        let url = 'https://api.openweathermap.org/data/2.5/weather?lat=' + this.state.lat + '&lon=' + this.state.long + '&appid=' + OPEN_WEATHER_API_KEY + '&units=imperial';
+        this.getWeather(url)
+      },
+      error => Alert.alert('Error', JSON.stringify(error)),
+      {enableHighAccuracy: true, timeout: 20000, maximumAge: 1000},
+    );*/
+	}
+
   render() {
+
     return (
       <View style={styles.weatherViewStyle}>
         <Text style={styles.locationStyle}>{this.state.location}</Text>

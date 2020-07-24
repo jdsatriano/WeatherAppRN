@@ -2,11 +2,12 @@ import React, { Component } from 'react';
 import { View, StyleSheet, ImageBackground, Text } from 'react-native';
 import WeatherView from './components/WeatherView.js'
 import SearchBar from 'react-native-search-bar';
+navigator.geolocation = require('@react-native-community/geolocation');
 
 
 export default class App extends React.Component {
   state = {
-    search: '',
+    search: 'Austin',
     isDay: true,
     needUpdate: false
   };
