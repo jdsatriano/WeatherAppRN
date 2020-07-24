@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, StyleSheet, ImageBackground, Text, Button } from 'react-native';
+import { View, StyleSheet, ImageBackground, Text, Button, Keyboard } from 'react-native';
 import WeatherView from './components/WeatherView.js'
 import SearchBar from 'react-native-search-bar';
 navigator.geolocation = require('@react-native-community/geolocation');
@@ -14,8 +14,9 @@ export default class App extends React.Component {
   };
 
   searchSubmit = (search) => {
-    this.setState({search: search, needUpdate: true, getCurrent: false});
     this.refs.searchBar.clearText();
+    this.refs.searchBar.unFocus();
+    this.setState({search: search, needUpdate: true, getCurrent: false});
   };
 
   updateImage = (isDay) => {
