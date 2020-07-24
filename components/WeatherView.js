@@ -14,8 +14,7 @@ export default class WeatherView extends React.Component {
   }
 
   componentDidMount() {
-    // load with geolocation weather data
-    this.getLocation()
+    this.getLocation();
   }
 
   componentDidUpdate() {
@@ -53,26 +52,17 @@ export default class WeatherView extends React.Component {
   }
 
   getLocation() {
-    navigator.geolocation.watchPosition((position) => {
+    navigator.geolocation.getCurrentPosition((position) => {
       this.setState({lat: position.coords.latitude, long: position.coords.longitude})
-      console.log(position.coords.latitude)
-      console.log(position.coords.longitude)
       let url = 'https://api.openweathermap.org/data/2.5/weather?lat=' + this.state.lat + '&lon=' + this.state.long + '&appid=' + OPEN_WEATHER_API_KEY + '&units=imperial';
-      console.log(url)
       this.getWeather(url)
-    }, (error)=>console.log(error));
+    }, (error) => {
+      console.log(error);
 
-    /*Geolocation.getCurrentPosition(
-      position => {
-        const initialPosition = JSON.stringify(position);
-        console.log(initialPosition)
-        this.setState({lat: initialPosition.coords.latitude, long: initialPosition.coords.longitude})
-        let url = 'https://api.openweathermap.org/data/2.5/weather?lat=' + this.state.lat + '&lon=' + this.state.long + '&appid=' + OPEN_WEATHER_API_KEY + '&units=imperial';
-        this.getWeather(url)
-      },
-      error => Alert.alert('Error', JSON.stringify(error)),
-      {enableHighAccuracy: true, timeout: 20000, maximumAge: 1000},
-    );*/
+      // Just load with default
+      let url = 'https://api.openweathermap.org/data/2.5/weather?q=Austin' + '&appid=' + OPEN_WEATHER_API_KEY + '&units=imperial';
+      this.getWeather(url);
+    });
 	}
 
   render() {

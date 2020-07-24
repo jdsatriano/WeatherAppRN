@@ -7,7 +7,7 @@ navigator.geolocation = require('@react-native-community/geolocation');
 
 export default class App extends React.Component {
   state = {
-    search: 'Austin',
+    search: '',
     isDay: true,
     needUpdate: false
   };
