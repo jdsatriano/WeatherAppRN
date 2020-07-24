@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, StyleSheet, ImageBackground, Text } from 'react-native';
+import { View, StyleSheet, ImageBackground, Text, Button } from 'react-native';
 import WeatherView from './components/WeatherView.js'
 import SearchBar from 'react-native-search-bar';
 navigator.geolocation = require('@react-native-community/geolocation');
@@ -9,21 +9,28 @@ export default class App extends React.Component {
   state = {
     search: '',
     isDay: true,
-    needUpdate: false
+    needUpdate: false,
+    getCurrent: false
   };
 
   searchSubmit = (search) => {
-    this.setState({search: search, needUpdate: true});
+    this.setState({search: search, needUpdate: true, getCurrent: false});
     this.refs.searchBar.clearText();
   };
 
   updateImage = (isDay) => {
-    this.setState({isDay: isDay, needUpdate: false});
+    this.setState({isDay: isDay, needUpdate: false, getCurrent: false});
+  }
+
+  showCurrentLocation = () => {
+    this.setState({getCurrent: true, needUpdate: false})
   }
 
   render() {
     const search = this.state.search;
     const isDay = this.state.isDay;
+
+    //console.log("hola");
 
     return (
         <View style={styles.container}>
@@ -39,7 +46,14 @@ export default class App extends React.Component {
                 barStyle='black'
               />
             </View>
-            <WeatherView citySearch={search} updateImage={this.updateImage} update={this.state.needUpdate}/>
+            <WeatherView citySearch={search} updateImage={this.updateImage} update={this.state.needUpdate} getCurrent={this.state.getCurrent}/>
+            <View style={styles.currentLocStyle}>
+              <Button
+                onPress={this.showCurrentLocation}
+                title="Get for current location"
+                color="white"
+              />
+            </View>
           </ImageBackground>
         </View>
     );
@@ -63,5 +77,14 @@ const styles = StyleSheet.create({
   },
   test: {
     backgroundColor: 'white',
+  },
+  currentLocStyle: {
+    marginTop: '20%',
+    backgroundColor: 'blue',
+    width: '60%',
+    height: '5%',
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 20
   }
 });

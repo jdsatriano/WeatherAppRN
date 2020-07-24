@@ -23,6 +23,9 @@ export default class WeatherView extends React.Component {
       const city = this.props.citySearch
   		let url = 'https://api.openweathermap.org/data/2.5/weather?q=' + city + '&appid=' + OPEN_WEATHER_API_KEY + '&units=imperial';
       this.getWeather(url)
+    } else if (this.props.getCurrent) {
+      navigator.geolocation.requestAuthorization()
+      this.getLocation()
     }
   }
 
@@ -37,6 +40,7 @@ export default class WeatherView extends React.Component {
       let feels = data.main.feels_like.toString() + 'F'
       let description = data.weather[0].description
 
+      this.props.updateImage(isDay);
       this.setState({
         location: name,
         icon: data.weather[0].icon,
@@ -44,7 +48,6 @@ export default class WeatherView extends React.Component {
         feelsLike: data.main.feels_like + ' F',
         description: description
       });
-      this.props.updateImage(isDay);
     })
     .catch(error => {
       console.log(error);
@@ -57,8 +60,7 @@ export default class WeatherView extends React.Component {
       let url = 'https://api.openweathermap.org/data/2.5/weather?lat=' + this.state.lat + '&lon=' + this.state.long + '&appid=' + OPEN_WEATHER_API_KEY + '&units=imperial';
       this.getWeather(url)
     }, (error) => {
-      console.log(error);
-
+      console.log(error)
       // Just load with default
       let url = 'https://api.openweathermap.org/data/2.5/weather?q=Austin' + '&appid=' + OPEN_WEATHER_API_KEY + '&units=imperial';
       this.getWeather(url);
